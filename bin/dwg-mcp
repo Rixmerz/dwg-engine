@@ -11,4 +11,9 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   docker build -t "$IMG" "$ROOT" >&2
 fi
 
-exec docker run -i --rm -v "$HOME:$HOME" -w "$HOME" "$IMG" mcp
+# Run as the host user (not root) so output files are owned by the caller,
+# with HOME=/tmp because that uid has no home inside the image (xvfb-run needs a
+# writable HOME for its .Xauthority).
+exec docker run -i --rm \
+  --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -v "$HOME:$HOME" -w "$HOME" "$IMG" mcp
