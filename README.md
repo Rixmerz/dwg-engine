@@ -21,8 +21,8 @@ ezdxf → ODA File Converter, which is what this image bakes in.
 ## Install (as a plugin)
 
 ```
-/plugin marketplace add Rixmerz/dwg-engine
-/plugin install dwg-engine@dwg-engine
+/plugin marketplace add Rixmerz/claude-plugins
+/plugin install dwg-engine@rixmerz
 ```
 
 First tool call builds the Docker image (~2–4 min, one time).
