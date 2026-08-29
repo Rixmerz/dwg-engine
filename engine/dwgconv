@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""DXF<->DWG conversion engine.
+
+Write (DXF->DWG): ODA File Converter (free), driven headless under xvfb-run.
+Read  (DWG->DXF): LibreDWG dwg2dxf (mature read, even for R2018).
+
+Both tools live in the image, so a plugin user installs nothing.
+"""
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ODA = "/usr/bin/ODAFileConverter"
+
+
+def to_dwg(src_dxf: str, out_dwg: str, ver: str = "ACAD2018") -> None:
+    src, out = Path(src_dxf), Path(out_dwg)
+    if not src.is_file():
+        sys.exit(f"no such DXF: {src}")
+    # ODA works folder-to-folder, so stage the single file in temp dirs.
+    with tempfile.TemporaryDirectory() as ind, tempfile.TemporaryDirectory() as outd:
+        shutil.copy(src, Path(ind) / src.name)
+        subprocess.run(
+            ["xvfb-run", "-a", ODA, ind, outd, ver, "DWG", "0", "1", "*.DXF"],
+            check=True,
+        )
+        # ODA may emit .dwg or .DWG — glob case-insensitively.
+        produced = next(Path(outd).glob("*.[dD][wW][gG]"), None)
+        if produced is None:
+            sys.exit("ODA File Converter produced no DWG (check the DXF is valid)")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(produced), str(out))
+    print(f"OK to-dwg: {out}")
+
+
+def to_dxf(src_dwg: str, out_dxf: str) -> None:
+    if not Path(src_dwg).is_file():
+        sys.exit(f"no such DWG: {src_dwg}")
+    subprocess.run(["dwg2dxf", "-o", out_dxf, src_dwg], check=True)
+    print(f"OK to-dxf: {out_dxf}")
+
+
+def main() -> None:
+    a = sys.argv
+    if len(a) >= 4 and a[1] == "to-dwg":
+        to_dwg(a[2], a[3], a[4] if len(a) > 4 else "ACAD2018")
+    elif len(a) == 4 and a[1] == "to-dxf":
+        to_dxf(a[2], a[3])
+    else:
+        sys.exit(
+            "usage:\n"
+            "  dwgconv to-dwg IN.dxf OUT.dwg [ACAD2018|ACAD2013|...]\n"
+            "  dwgconv to-dxf IN.dwg OUT.dxf"
+        )
+
+
+if __name__ == "__main__":
+    main()

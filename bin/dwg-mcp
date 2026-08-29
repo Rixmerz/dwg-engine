@@ -1,0 +1,14 @@
+#!/bin/sh
+# Launch the DWG-engine MCP server inside its Docker image.
+# Builds the image on first run so a plugin user needs only Docker.
+# $HOME is mounted 1:1 so absolute host paths are valid inside the container.
+set -e
+IMG="dwg-engine:0.1"
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+
+if ! docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "dwg-engine: building image $IMG (first run, ~2-4 min)..." >&2
+  docker build -t "$IMG" "$ROOT" >&2
+fi
+
+exec docker run -i --rm -v "$HOME:$HOME" -w "$HOME" "$IMG" mcp

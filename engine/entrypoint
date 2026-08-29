@@ -1,0 +1,6 @@
+#!/bin/sh
+# `mcp` -> stdio MCP server; anything else -> the dwgconv CLI.
+if [ "$1" = "mcp" ]; then
+  exec python3 /engine/mcp_server.py
+fi
+exec python3 /engine/dwgconv "$@"

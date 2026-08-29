@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "dwg": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/dwg-mcp"
+    }
+  }
+}

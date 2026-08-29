@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "dwg-engine",
+  "description": "Free DWG toolchain: generate real .dwg files with no paid CAD.",
+  "owner": {
+    "name": "Rixmerz",
+    "url": "https://github.com/Rixmerz"
+  },
+  "plugins": [
+    {
+      "name": "dwg-engine",
+      "description": "MCP tools that convert DXF to real DWG (via the free ODA File Converter, in Docker).",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

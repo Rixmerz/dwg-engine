@@ -1,0 +1,5 @@
+*.deb
+*.dwg
+*.dxf
+__pycache__/
+*.pyc

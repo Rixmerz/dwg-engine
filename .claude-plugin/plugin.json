@@ -1,0 +1,9 @@
+{
+  "name": "dwg-engine",
+  "description": "Generate real DWG files with no paid CAD. ezdxf + the free ODA File Converter, packaged in Docker and exposed as MCP tools. The host needs only Docker.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Rixmerz",
+    "url": "https://github.com/Rixmerz"
+  }
+}
